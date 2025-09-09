@@ -1,0 +1,20 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="v1_004_create_profiles_table" author="Maxim Mashnin">
+        <createTable tableName="profiles">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" foreignKeyName="fk_profiles_user"
+                             references="users(id)"/>
+            </column>
+            <column name="lastname" type="varchar(50)"/>
+            <column name="firstname" type="varchar(50)"/>
+            <column name="birthday" type="date"/>
+            <column name="theme" type="varchar(20)" defaultValue="light">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

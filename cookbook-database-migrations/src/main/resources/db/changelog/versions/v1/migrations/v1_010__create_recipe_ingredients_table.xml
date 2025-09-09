@@ -1,0 +1,31 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="v1_010_create_recipe_ingredients_table" author="Maxim Mashnin">
+        <createTable tableName="recipe_ingredients">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="amount" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_id" type="smallint">
+                <constraints nullable="false" foreignKeyName="fk_recipe_ingredients_unit"
+                             references="units(id)"/>
+            </column>
+            <column name="recipe_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_recipe_ingredients_recipe"
+                             references="recipes(id)"/>
+            </column>
+            <column name="ingredient_id" type="integer">
+                <constraints nullable="false" foreignKeyName="fk_recipe_ingredients_ingredient"
+                             references="ingredients(id)"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="recipe_ingredients"
+                             columnNames="recipe_id, ingredient_id"
+                             constraintName="uk_recipe_ingredients"/>
+    </changeSet>
+</databaseChangeLog>

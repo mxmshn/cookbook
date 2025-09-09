@@ -1,0 +1,21 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="v1_011_insert_default_roles" author="Maxim Mashnin">
+
+        <insert tableName="roles">
+            <column name="name" value="ADMIN"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="name" value="USER"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="name" value="MODERATOR"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
