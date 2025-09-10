@@ -1,5 +1,6 @@
 package ru.mashnin.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegistrationUserDto registrationUserDto) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
         return ResponseEntity.ok(userService.register(registrationUserDto));
     }
 }
