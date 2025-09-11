@@ -17,5 +17,4 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, unique = true, length = 25)
     private RoleName name;
-
 }

@@ -3,19 +3,25 @@ package ru.mashnin.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.mashnin.dto.request.RegistrationUserDto;
-import ru.mashnin.service.UserService;
+import ru.mashnin.dto.response.UserResponseDto;
+import ru.mashnin.service.AuthService;
 
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
-        return ResponseEntity.ok(userService.register(registrationUserDto));
+    public ResponseEntity<?> startRegister(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
+        authService.startRegistration(registrationUserDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/confirm-email")
+    public ResponseEntity<?> completeRegister(@RequestParam("token") String token) {
+        UserResponseDto userResponseDto = authService.completeRegistration(token);
+        return ResponseEntity.status(201).body(String.format("Email '%s' активирован", userResponseDto.getEmail()));
     }
 }
