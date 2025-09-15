@@ -31,11 +31,13 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    private static final int REGISTRATION_EXPIRATION_HOURS = 24;
+    private static final TimeUnit REGISTRATION_EXPIRATION_UNIT = TimeUnit.HOURS;
+
     private final UserService userService;
     private final RoleService roleService;
     private final RedisService redisService;
     private final MailService mailService;
-    private final SecurityUserService securityUserService;
     private final JwtService jwtService;
 
     private final AuthenticationManager authenticationManager;
@@ -52,25 +54,28 @@ public class AuthServiceImpl implements AuthService {
             throw new UserAlreadyExistsException(userDto.getEmail());
         }
 
-        String token = UUID.randomUUID().toString();
-        String registrationDataKey = "registration_data:" + token;
+        String confirmationToken = UUID.randomUUID().toString();
+        String registrationRedisKey = getRegistrationDataKey(confirmationToken);
 
         RegistrationData registrationData = new RegistrationData(
                 userDto.getEmail(),
                 passwordEncoder.encode(userDto.getPassword())
         );
 
-        redisService.save(registrationDataKey, registrationData, 24, TimeUnit.HOURS);
-        String confirmationLink = baseUrl + "/confirm-email?token=" + token;
+        redisService.save(registrationRedisKey, registrationData,
+                REGISTRATION_EXPIRATION_HOURS,
+                REGISTRATION_EXPIRATION_UNIT);
+        String confirmationLink = baseUrl + "/confirm-email?confirmationToken=" + confirmationToken;
         mailService.sendEmailConfirmation(userDto.getEmail(), confirmationLink);
 
     }
 
-    public UserResponseDto completeRegistration(String token) {
-        String registrationDataKey = "registration_data:" + token;
+    public UserResponseDto completeRegistration(String confirmationToken) {
+        String registrationDataKey = getRegistrationDataKey(confirmationToken);
         RegistrationData registrationData = redisService.get(registrationDataKey, RegistrationData.class);
 
         if (registrationData == null) {
+            log.warn("Попытка завершения регистрации с недействительным токеном: {}", confirmationToken);
             throw new IllegalArgumentException("Недействительный или просроченный токен");
         }
 
@@ -84,6 +89,7 @@ public class AuthServiceImpl implements AuthService {
         redisService.delete(registrationDataKey);
 
         mailService.sendWelcomeEmail(user.getEmail(), user.getEmail());
+        log.info("Успешная регистрация пользователя: {}", user.getEmail());
         return userMapper.toResponseDto(savedUser);
     }
 
@@ -92,12 +98,18 @@ public class AuthServiceImpl implements AuthService {
         try {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            log.warn("Неверный логин или пароль");
+            log.warn("Неверные учетные данные для пользователя: {}", loginRequest.getUsername());
             throw new InvalidCredentialsException();
         }
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String accessToken = jwtService.generateAccessToken(userDetails);
         String refreshToken = jwtService.generateRefreshToken(userDetails);
+
+        log.info("Успешная аутентификация пользователя: {}", loginRequest.getUsername());
         return new LoginResponse(accessToken, refreshToken);
+    }
+
+    public String getRegistrationDataKey(String token) {
+        return "registration_data:" + token;
     }
 }

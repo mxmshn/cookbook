@@ -21,7 +21,7 @@ public class AuthController {
     }
 
     @GetMapping("/confirm-email")
-    public ResponseEntity<?> completeRegister(@RequestParam("token") String token) {
+    public ResponseEntity<?> completeRegister(@RequestParam("confirmationToken") String token) {
         UserResponseDto userResponseDto = authService.completeRegistration(token);
         return ResponseEntity.status(201).body(String.format("Email '%s' активирован", userResponseDto.getEmail()));
     }

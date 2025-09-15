@@ -14,6 +14,7 @@
         <module>cookbook-database-migrations</module>
         <module>cookbook-recipes</module>
         <module>cookbook-user-management</module>
+        <module>cookbook-model</module>
     </modules>
 
     <properties>
@@ -50,6 +51,14 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <argLine>-XX:+EnableDynamicAgentLoading</argLine>
                 </configuration>
             </plugin>
         </plugins>

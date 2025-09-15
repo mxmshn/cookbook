@@ -1,5 +1,6 @@
 package ru.mashnin.service;
 
+
 import ru.mashnin.entity.User;
 
 public interface UserService {

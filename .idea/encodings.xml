@@ -5,6 +5,8 @@
     <file url="file://$PROJECT_DIR$/cookbook-app/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cookbook-database-migrations/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cookbook-database-migrations/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cookbook-model/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cookbook-model/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cookbook-recipes/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cookbook-recipes/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cookbook-user-management/src/main/java" charset="UTF-8" />
