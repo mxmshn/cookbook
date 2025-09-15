@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.mashnin.service.MailService;
 
@@ -25,6 +24,7 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendEmailConfirmation(String toEmail, String confirmationLink) {
+        log.info("Попытка отправки письма подтверждения email на почту '{}'", toEmail);
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -43,6 +43,7 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendWelcomeEmail(String toEmail, String username) {
+        log.info("Попытка отправки приветственного письма на почту '{}'", toEmail);
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

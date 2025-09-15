@@ -1,3 +1,6 @@
+app:
+  base-url: "http://localhost:8080"
+
 spring:
   application:
     name: CookBook
@@ -52,4 +55,5 @@ logging:
 
 jwt:
   secret: ${jwt.secret}
-  lifetime: ${jwt.lifetime}
+  access-lifetime-minutes: ${}
+  refresh-lifetime-days: ${}

@@ -11,8 +11,6 @@ public class TestController {
 
     @GetMapping("/test")
     public ResponseEntity<?> test() {
-        log.info("Test method run");
-        log.info("Test method end");
         return ResponseEntity.ok("Test message");
     }
 

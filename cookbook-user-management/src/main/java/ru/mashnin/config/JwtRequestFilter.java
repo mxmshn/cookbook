@@ -13,7 +13,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.mashnin.utils.JwtTokenUtils;
+import ru.mashnin.exception.JwtAuthenticationException;
+import ru.mashnin.service.JwtService;
+import ru.mashnin.service.UserService;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -22,7 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
-    private final JwtTokenUtils jwtTokenUtils;
+    private final UserService userService;
+    private final JwtService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,18 +35,24 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
             try {
-                username = jwtTokenUtils.getUsername(jwt);
+                username = jwtService.getUsername(jwt);
             } catch (ExpiredJwtException e) {
                 log.info("Время жизни токена вышло");
             } catch (SignatureException e) {
                 log.info("Подпись неправильная");
+            } catch (Exception e) {
+                log.info("Ошибка при парсинге токена");
             }
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (!userService.existsUserByEmail(username)) {
+                log.error("Не существует пользователя с email: '{}', которому принадлежит данный токен", username);
+                throw new JwtAuthenticationException("Пользователь, которому принадлежит токен, не найден");
+            }
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     username,
                     null,
-                    jwtTokenUtils.getRoles(jwt).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                    jwtService.getRoles(jwt).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
             );
             SecurityContextHolder.getContext().setAuthentication(token);
         }
