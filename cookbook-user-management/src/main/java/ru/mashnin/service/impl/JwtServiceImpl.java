@@ -25,11 +25,11 @@ public class JwtServiceImpl implements JwtService {
     private final JwtProperties properties;
 
     public String generateAccessToken(UserDetails userDetails) {
-        return generateToken(userDetails, properties.getAccessLifetimeMinutes());
+        return generateToken(userDetails, Duration.ofMinutes(properties.getAccessLifetimeMinutes()));
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
-        return generateToken(userDetails, properties.getRefreshLifetimeDays());
+        return generateToken(userDetails, Duration.ofDays(properties.getRefreshLifetimeDays()));
     }
 
 

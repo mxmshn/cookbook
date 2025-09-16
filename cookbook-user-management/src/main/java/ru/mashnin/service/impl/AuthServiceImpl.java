@@ -19,6 +19,8 @@ import ru.mashnin.entity.User;
 import ru.mashnin.enums.RoleName;
 import ru.mashnin.exception.InvalidCredentialsException;
 import ru.mashnin.exception.UserAlreadyExistsException;
+import ru.mashnin.factory.EmailContent;
+import ru.mashnin.factory.EmailContentFactory;
 import ru.mashnin.mapper.UserMapper;
 import ru.mashnin.service.*;
 
@@ -43,12 +45,13 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final EmailContentFactory emailContentFactory;
 
     @Value("${app.base-url}")
     private String baseUrl;
 
     @Override
-    public void startRegistration(RegistrationRequest userDto) {
+    public void beginRegistration(RegistrationRequest userDto) {
         if (userService.existsUserByEmail(userDto.getEmail())) {
             log.warn("Попытка регистрации пользователя с уже существующим email: {}", userDto.getEmail());
             throw new UserAlreadyExistsException(userDto.getEmail());
@@ -65,8 +68,10 @@ public class AuthServiceImpl implements AuthService {
         redisService.save(registrationRedisKey, registrationData,
                 REGISTRATION_EXPIRATION_HOURS,
                 REGISTRATION_EXPIRATION_UNIT);
+
         String confirmationLink = baseUrl + "/confirm-email?confirmationToken=" + confirmationToken;
-        mailService.sendEmailConfirmation(userDto.getEmail(), confirmationLink);
+        EmailContent emailContent = emailContentFactory.createConfirmationEmail(userDto.getEmail(), confirmationLink);
+        mailService.sendMessage(emailContent);
 
     }
 
@@ -88,12 +93,14 @@ public class AuthServiceImpl implements AuthService {
 
         redisService.delete(registrationDataKey);
 
-        mailService.sendWelcomeEmail(user.getEmail(), user.getEmail());
+        EmailContent emailContent = emailContentFactory.createWelcomeEmail(user.getEmail(), user.getEmail());
+        mailService.sendMessage(emailContent);
+
         log.info("Успешная регистрация пользователя: {}", user.getEmail());
         return userMapper.toResponseDto(savedUser);
     }
 
-    public LoginResponse createAuthToken(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -109,7 +116,7 @@ public class AuthServiceImpl implements AuthService {
         return new LoginResponse(accessToken, refreshToken);
     }
 
-    public String getRegistrationDataKey(String token) {
+    private String getRegistrationDataKey(String token) {
         return "registration_data:" + token;
     }
 }

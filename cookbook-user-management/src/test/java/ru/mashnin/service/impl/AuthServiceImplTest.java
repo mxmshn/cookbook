@@ -8,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.mashnin.dto.RegistrationData;
 import ru.mashnin.dto.request.RegistrationRequest;
-import ru.mashnin.service.MailService;
 import ru.mashnin.service.RedisService;
 import ru.mashnin.service.UserService;
 
@@ -44,7 +43,7 @@ class AuthServiceImplTest {
 
         when(userService.existsUserByEmail(request.getEmail())).thenReturn(false);
 
-        authService.startRegistration(request);
+        authService.beginRegistration(request);
 
 
         verify(userService).existsUserByEmail(request.getEmail());

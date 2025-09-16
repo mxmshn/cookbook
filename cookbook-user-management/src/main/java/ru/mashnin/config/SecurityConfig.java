@@ -33,7 +33,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/secured", "/info").authenticated()
+                        .requestMatchers( "/info").authenticated()
+                        .requestMatchers("/secured").hasRole("USER")
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
@@ -50,9 +51,8 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(securityUserService);
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(securityUserService);
         return provider;
     }
 

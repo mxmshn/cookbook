@@ -15,6 +15,7 @@
         <module>cookbook-recipes</module>
         <module>cookbook-user-management</module>
         <module>cookbook-model</module>
+        <module>cookbook-mail</module>
     </modules>
 
     <properties>
