@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mashnin.dto.RegistrationData;
 import ru.mashnin.dto.request.LoginRequest;
 import ru.mashnin.dto.request.RegistrationRequest;
@@ -51,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
     private String baseUrl;
 
     @Override
+    @Transactional
     public void beginRegistration(RegistrationRequest userDto) {
         if (userService.existsUserByEmail(userDto.getEmail())) {
             log.warn("Попытка регистрации пользователя с уже существующим email: {}", userDto.getEmail());
@@ -75,6 +77,8 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
+    @Override
+    @Transactional
     public UserResponseDto completeRegistration(String confirmationToken) {
         String registrationDataKey = getRegistrationDataKey(confirmationToken);
         RegistrationData registrationData = redisService.get(registrationDataKey, RegistrationData.class);
@@ -100,6 +104,8 @@ public class AuthServiceImpl implements AuthService {
         return userMapper.toResponseDto(savedUser);
     }
 
+    @Override
+    @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
         Authentication authentication;
         try {
