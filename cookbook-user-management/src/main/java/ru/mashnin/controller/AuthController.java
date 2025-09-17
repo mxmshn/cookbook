@@ -1,11 +1,15 @@
 package ru.mashnin.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.mashnin.dto.request.LoginRequest;
 import ru.mashnin.dto.request.RegistrationRequest;
@@ -13,11 +17,15 @@ import ru.mashnin.dto.response.AccessTokenResponse;
 import ru.mashnin.dto.response.ApiResponse;
 import ru.mashnin.dto.response.LoginResponse;
 import ru.mashnin.service.AuthService;
+import ru.mashnin.service.JwtService;
+import ru.mashnin.service.RoleService;
 
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final JwtService jwtService;
+    private final RoleService roleService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
@@ -52,5 +60,13 @@ public class AuthController {
         return ResponseEntity.ok(new ApiResponse<>(true,
                 "Успешная аутентификация",
                 responseBody));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<String>> refresh(@CookieValue("refreshToken") String refreshToken) {
+        String accessToken = jwtService.refreshAccessToken(refreshToken);
+        return ResponseEntity.ok(new ApiResponse<>(true,
+                "Новый access токен",
+                accessToken));
     }
 }

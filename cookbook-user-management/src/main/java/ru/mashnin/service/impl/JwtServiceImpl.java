@@ -1,10 +1,14 @@
 package ru.mashnin.service.impl;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.mashnin.config.JwtProperties;
@@ -58,6 +62,34 @@ public class JwtServiceImpl implements JwtService {
     @SuppressWarnings("unchecked")
     public List<String> getRoles(String token) {
         return (List<String>) getAllClaimsFromToken(token).get("roles");
+    }
+
+    public void validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(Keys.hmacShaKeyFor(properties.getSecret().getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseSignedClaims(token);
+        }
+        catch (SignatureException e) {
+            System.out.println("Invalid JWT signature: " + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            System.out.println("JWT token is expired: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Invalid JWT token: " + e.getMessage());
+        }
+    }
+
+    public String refreshAccessToken(String token) {
+        validateToken(token);
+        List<SimpleGrantedAuthority> list = getRoles(token).stream()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+
+        UserDetails userDetails = new User(getUsername(token),
+                "",
+                list);
+        return generateAccessToken(userDetails);
     }
 
     private Claims getAllClaimsFromToken(String token) {
