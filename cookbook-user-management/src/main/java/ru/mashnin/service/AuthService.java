@@ -7,6 +7,6 @@ import ru.mashnin.dto.response.UserResponseDto;
 
 public interface AuthService {
     void beginRegistration(RegistrationRequest registrationRequest);
-    UserResponseDto completeRegistration(String token);
+    void completeRegistration(String token);
     LoginResponse login(LoginRequest loginRequest);
 }

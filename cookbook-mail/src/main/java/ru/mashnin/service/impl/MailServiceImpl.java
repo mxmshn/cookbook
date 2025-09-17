@@ -28,7 +28,7 @@ public class MailServiceImpl implements MailService {
     private String appName;
 
     public void sendMessage(EmailContent emailContent) {
-        log.info("Попытка отправки письма подтверждения email на почту '{}'", emailContent.getMailTo());
+        log.info("Попытка отправки письма на почту '{}'", emailContent.getMailTo());
         try {
             MimeMessage message = mailSender.createMimeMessage();
 
@@ -39,10 +39,10 @@ public class MailServiceImpl implements MailService {
             mimeMessageHelper.setFrom(fromEmail, appName);
 
             mailSender.send(message);
-            log.info("Письмо для подтверждения email отправлено на: {}", emailContent.getMailTo());
+            log.info("Письмо отправлено на: {}", emailContent.getMailTo());
         } catch (MessagingException | UnsupportedEncodingException messagingException) {
             log.warn("Ошибка отправки письма");
-            throw new MailSendException("Не удалось отправить email", messagingException);
+            throw new MailSendException("Не удалось отправить письмо", messagingException);
         }
     }
 }

@@ -1,14 +1,17 @@
 package ru.mashnin.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mashnin.dto.request.LoginRequest;
 import ru.mashnin.dto.request.RegistrationRequest;
+import ru.mashnin.dto.response.AccessTokenResponse;
 import ru.mashnin.dto.response.ApiResponse;
 import ru.mashnin.dto.response.LoginResponse;
-import ru.mashnin.dto.response.UserResponseDto;
 import ru.mashnin.service.AuthService;
 
 @RestController
@@ -25,17 +28,29 @@ public class AuthController {
     }
 
     @GetMapping("/confirm-email")
-    public ResponseEntity<ApiResponse<UserResponseDto>> confirmEmail(@RequestParam("confirmationToken") String token) {
-        UserResponseDto userResponseDto = authService.completeRegistration(token);
+    public ResponseEntity<ApiResponse<Void>> confirmEmail(@RequestParam("confirmationToken") String token) {
+        authService.completeRegistration(token);
         return ResponseEntity.status(201).body(new ApiResponse<>(true,
-                String.format("Email '%s' активирован", userResponseDto.getEmail()),
-                userResponseDto));
+                "Email успешно активирован",
+                null));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ApiResponse<AccessTokenResponse>> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        LoginResponse loginResponse = authService.login(loginRequest);
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(7 * 24 * 60 * 60)
+                .sameSite("Strict")
+                .build();
+        response.setHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
+        AccessTokenResponse responseBody = new AccessTokenResponse(loginResponse.getAccessToken());
+
         return ResponseEntity.ok(new ApiResponse<>(true,
                 "Успешная аутентификация",
-                authService.login(loginRequest)));
+                responseBody));
     }
 }
