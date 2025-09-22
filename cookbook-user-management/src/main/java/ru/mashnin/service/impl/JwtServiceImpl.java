@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class JwtServiceImpl implements JwtService {
 
     private final JwtProperties properties;
@@ -70,13 +72,15 @@ public class JwtServiceImpl implements JwtService {
                     .verifyWith(Keys.hmacShaKeyFor(properties.getSecret().getBytes(StandardCharsets.UTF_8)))
                     .build()
                     .parseSignedClaims(token);
-        }
-        catch (SignatureException e) {
-            System.out.println("Invalid JWT signature: " + e.getMessage());
+        } catch (SignatureException e) {
+            log.warn("Неверная подпись JWT");
+            throw e;
         } catch (ExpiredJwtException e) {
-            System.out.println("JWT token is expired: " + e.getMessage());
+            log.warn("Срок действия JWT истек");
+            throw e;
         } catch (Exception e) {
-            System.out.println("Invalid JWT token: " + e.getMessage());
+            log.warn("Некорректный JWT");
+            throw e;
         }
     }
 

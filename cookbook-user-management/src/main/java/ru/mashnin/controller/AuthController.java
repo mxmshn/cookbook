@@ -1,35 +1,31 @@
 package ru.mashnin.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.mashnin.dto.request.LoginRequest;
 import ru.mashnin.dto.request.RegistrationRequest;
 import ru.mashnin.dto.response.AccessTokenResponse;
 import ru.mashnin.dto.response.ApiResponse;
 import ru.mashnin.dto.response.LoginResponse;
-import ru.mashnin.service.AuthService;
 import ru.mashnin.service.JwtService;
-import ru.mashnin.service.RoleService;
+import ru.mashnin.service.LoginService;
+import ru.mashnin.service.RegistrationService;
 
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService authService;
+    private final RegistrationService registrationService;
+    private final LoginService loginService;
     private final JwtService jwtService;
-    private final RoleService roleService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
-        authService.beginRegistration(registrationRequest);
+        registrationService.beginRegistration(registrationRequest);
         return ResponseEntity.ok(new ApiResponse<>(true,
                 "Регистрация начата, подвердите email",
                 null));
@@ -37,7 +33,7 @@ public class AuthController {
 
     @GetMapping("/confirm-email")
     public ResponseEntity<ApiResponse<Void>> confirmEmail(@RequestParam("confirmationToken") String token) {
-        authService.completeRegistration(token);
+        registrationService.completeRegistration(token);
         return ResponseEntity.status(201).body(new ApiResponse<>(true,
                 "Email успешно активирован",
                 null));
@@ -45,7 +41,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AccessTokenResponse>> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        LoginResponse loginResponse = authService.login(loginRequest);
+        LoginResponse loginResponse = loginService.login(loginRequest);
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
                 .httpOnly(true)
