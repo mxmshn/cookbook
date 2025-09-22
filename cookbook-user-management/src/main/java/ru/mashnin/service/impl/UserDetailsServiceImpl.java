@@ -1,4 +1,4 @@
-package ru.mashnin.service;
+package ru.mashnin.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class SecurityUserService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
