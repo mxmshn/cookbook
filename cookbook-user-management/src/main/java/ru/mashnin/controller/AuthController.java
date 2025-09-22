@@ -17,6 +17,7 @@ import ru.mashnin.service.LoginService;
 import ru.mashnin.service.RegistrationService;
 
 @RestController
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final RegistrationService registrationService;
