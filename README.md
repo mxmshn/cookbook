@@ -27,7 +27,10 @@
 
 ## 🧩 Модули проекта
 - **cookbook-app** — основной модуль приложения (точка входа, конфигурация)
+- **cookbook-common-security** — модуль для работы с токенами
 - **cookbook-database-migrations** — миграции базы данных (Liquibase)
+- **cookbook-mail** — отправка писем
+- **cookbook-model** — все сущности проекта
 - **cookbook-recipes** — функционал работы с рецептами
 - **cookbook-user-management** — управление пользователями и ролями
 
