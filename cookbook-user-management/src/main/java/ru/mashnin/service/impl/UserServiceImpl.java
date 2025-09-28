@@ -2,11 +2,18 @@ package ru.mashnin.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mashnin.entity.User;
 import ru.mashnin.repository.UserRepository;
+import ru.mashnin.service.CustomUserDetails;
 import ru.mashnin.service.UserService;
+
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j

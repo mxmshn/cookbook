@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.mashnin.service.impl.UserDetailsServiceImpl;
+import ru.mashnin.service.impl.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +24,7 @@ import ru.mashnin.service.impl.UserDetailsServiceImpl;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final CustomUserDetailsService customUserDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers( "/info").authenticated()
                         .requestMatchers("/secured").hasRole("USER")
+                        .requestMatchers("/create").hasAnyRole("USER", "MODERATOR", "ADMIN")
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
@@ -51,7 +52,7 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsServiceImpl);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }

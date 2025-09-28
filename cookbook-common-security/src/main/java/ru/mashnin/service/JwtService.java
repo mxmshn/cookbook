@@ -1,4 +1,4 @@
-package ru.mashnin.service.impl;
+package ru.mashnin.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -9,42 +9,37 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.mashnin.config.JwtProperties;
-import ru.mashnin.service.JwtService;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class JwtServiceImpl implements JwtService {
+public class JwtService {
 
     private final JwtProperties properties;
 
-    public String generateAccessToken(UserDetails userDetails) {
+    public String generateAccessToken(CustomUserDetails userDetails) {
         return generateToken(userDetails, Duration.ofMinutes(properties.getAccessLifetimeMinutes()));
     }
 
-    public String generateRefreshToken(UserDetails userDetails) {
+    public String generateRefreshToken(CustomUserDetails userDetails) {
         return generateToken(userDetails, Duration.ofDays(properties.getRefreshLifetimeDays()));
     }
 
 
-    private String generateToken(UserDetails userDetails, Duration jwtLifetime) {
+    private String generateToken(CustomUserDetails userDetails, Duration jwtLifetime) {
         Map<String, Object> claims = new HashMap<>();
         List<String> rolesList = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         claims.put("roles", rolesList);
+        claims.put("id", userDetails.getId());
 
         Date issuedDate = new Date();
         Date expiredDate = new Date(issuedDate.getTime() + jwtLifetime.toMillis());
@@ -59,6 +54,10 @@ public class JwtServiceImpl implements JwtService {
 
     public String getUsername(String token) {
         return getAllClaimsFromToken(token).getSubject();
+    }
+
+    public UUID getId(String token) {
+        return getAllClaimsFromToken(token).get("id", UUID.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -90,7 +89,8 @@ public class JwtServiceImpl implements JwtService {
                 .map(SimpleGrantedAuthority::new)
                 .toList();
 
-        UserDetails userDetails = new User(getUsername(token),
+        CustomUserDetails userDetails = new CustomUserDetails(getId(token),
+                getUsername(token),
                 "",
                 list);
         return generateAccessToken(userDetails);

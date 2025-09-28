@@ -59,7 +59,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 REGISTRATION_EXPIRATION_HOURS,
                 REGISTRATION_EXPIRATION_UNIT);
 
-        String confirmationLink = baseUrl + "/confirm-email?confirmationToken=" + confirmationToken;
+        String confirmationLink = baseUrl + "/api/auth/confirm-email?confirmationToken=" + confirmationToken;
         EmailContent emailContent = emailContentFactory.createConfirmationEmail(userDto.getEmail(), confirmationLink);
         mailService.sendMessage(emailContent);
 

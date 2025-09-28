@@ -35,4 +35,12 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
 
+    @ManyToMany
+    @JoinTable(name = "favorites",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "recipe_id")}
+    )
+    private Set<Recipe> favoriteRecipes;
+
+
 }

@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ru.mashnin.dto.request.LoginRequest;
 import ru.mashnin.dto.response.LoginResponse;
 import ru.mashnin.exception.InvalidCredentialsException;
-import ru.mashnin.service.JwtService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

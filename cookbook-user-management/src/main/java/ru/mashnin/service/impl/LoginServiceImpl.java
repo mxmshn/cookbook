@@ -6,12 +6,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mashnin.dto.request.LoginRequest;
 import ru.mashnin.dto.response.LoginResponse;
 import ru.mashnin.exception.InvalidCredentialsException;
+import ru.mashnin.service.CustomUserDetails;
 import ru.mashnin.service.JwtService;
 import ru.mashnin.service.LoginService;
 
@@ -33,7 +33,7 @@ public class LoginServiceImpl implements LoginService {
             log.warn("Неверные учетные данные для пользователя: {}", loginRequest.getUsername());
             throw new InvalidCredentialsException();
         }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         String accessToken = jwtService.generateAccessToken(userDetails);
         String refreshToken = jwtService.generateRefreshToken(userDetails);
 
