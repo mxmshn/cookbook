@@ -17,6 +17,7 @@
             <column name="created_at" type="timestamp">
                 <constraints nullable="false"/>
             </column>
+
         </createTable>
     </changeSet>
 </databaseChangeLog>

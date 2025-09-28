@@ -1,8 +1,9 @@
 package ru.mashnin.service;
 
-import ru.mashnin.dto.request.RegistrationUserDto;
-import ru.mashnin.dto.response.UserResponseDto;
+
+import ru.mashnin.entity.User;
 
 public interface UserService {
-    UserResponseDto register(RegistrationUserDto registrationUserDto);
+    User createUser(User user);
+    boolean existsUserByEmail(String email);
 }

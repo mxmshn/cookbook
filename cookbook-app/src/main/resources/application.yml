@@ -1,27 +1,59 @@
+app:
+  base-url: "http://localhost:8080"
+
 spring:
+  application:
+    name: CookBook
+
   config:
     import: "optional:classpath:application-secret.properties"
-  application:
-    name: cookbook
+
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: true
     open-in-view: false
-
   datasource:
     url: ${db.url}
     username: ${db.username}
     password: ${db.password}
+
   liquibase:
     change-log: db/changelog/changelog-master.xml
+
+  mail:
+    host: smtp.mail.ru
+    port: 587
+    username: ${mail.username}
+    password: ${mail.password}
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          from: mashnin.cookbook@mail.ru
+        debug: false # Только для разработки!
+    default-encoding: UTF-8
+
+  data:
+    redis:
+      port: 6379
+      host: localhost
+
 logging:
   level:
     root: info
     org.springframework: warn
     org.hibernate: error
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{HH:mm:ss.SSS} [%8.8thread] %highlight(%-5.5level)| %class{60}.%M:%L %msg%n"
+
 jwt:
   secret: ${jwt.secret}
-  lifetime: ${jwt.lifetime}
+  access-lifetime-minutes: ${}
+  refresh-lifetime-days: ${}
