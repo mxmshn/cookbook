@@ -57,7 +57,8 @@ public class JwtService {
     }
 
     public UUID getId(String token) {
-        return getAllClaimsFromToken(token).get("id", UUID.class);
+        String idStr = getAllClaimsFromToken(token).get("id", String.class);
+        return UUID.fromString(idStr);
     }
 
     @SuppressWarnings("unchecked")

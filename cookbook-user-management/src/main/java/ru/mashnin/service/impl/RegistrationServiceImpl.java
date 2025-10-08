@@ -42,6 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     @Transactional
     public void beginRegistration(RegistrationRequest userDto) {
+
         if (userService.existsUserByEmail(userDto.getEmail())) {
             log.warn("Попытка регистрации пользователя с уже существующим email: {}", userDto.getEmail());
             throw new UserAlreadyExistsException(userDto.getEmail());
