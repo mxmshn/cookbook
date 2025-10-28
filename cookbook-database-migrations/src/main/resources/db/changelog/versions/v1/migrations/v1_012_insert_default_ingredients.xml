@@ -1,0 +1,85 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="v1_012_insert_default_ingredients" author="Maxim Mashnin">
+
+        <insert tableName="ingredients"><column name="name" value="Соль"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Сахар"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Мука"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Вода"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Масло сливочное"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Растительное масло"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Оливковое масло"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Яйцо"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Молоко"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Сметана"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Творог"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Йогурт"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Сливки"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Сыр твердый"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Масло растительное для жарки"/></insert>
+
+
+        <insert tableName="ingredients"><column name="name" value="Дрожжи"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Сода пищевая"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Разрыхлитель"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Перец чёрный"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Перец сладкий (болгарский)"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Лук репчатый"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Чеснок"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Морковь"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Картофель"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Томат"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Огурец"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Капуста"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Баклажан"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Шпинат"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Грибы шампиньоны"/></insert>
+
+
+        <insert tableName="ingredients"><column name="name" value="Тимьян"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Базилик"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Петрушка"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Укроп"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Розмарин"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Лавровый лист"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Кориандр (петрушечный)"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Кумин (зира)"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Паприка"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Куркума"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Корица молотая"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Имбирь свежий"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Кардамон"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Мускатный орех"/></insert>
+
+
+        <insert tableName="ingredients"><column name="name" value="Мёд"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Соевый соус"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Томатная паста"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Томатный соус"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Бульон (кубик/жидкий)"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Уксус столовый"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Горчица"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Соус табаско"/></insert>
+
+
+        <insert tableName="ingredients"><column name="name" value="Рис"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Гречка"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Овсянка"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Макароны"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Кукуруза консервированная"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Фасоль консервированная"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Горошек зелёный"/></insert>
+
+
+        <insert tableName="ingredients"><column name="name" value="Шоколад тёмный"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Какао-порошок"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Орехи (грецкие)"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Миндаль"/></insert>
+        <insert tableName="ingredients"><column name="name" value="Кунжут"/></insert>
+
+    </changeSet>
+
+</databaseChangeLog>

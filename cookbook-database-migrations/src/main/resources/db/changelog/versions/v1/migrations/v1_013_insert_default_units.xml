@@ -1,0 +1,19 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="v1_013_insert_default_units" author="Maxim Mashnin">
+
+        <insert tableName="units"><column name="name" value="г"/></insert>
+        <insert tableName="units"><column name="name" value="кг"/></insert>
+        <insert tableName="units"><column name="name" value="мл"/></insert>
+        <insert tableName="units"><column name="name" value="л"/></insert>
+        <insert tableName="units"><column name="name" value="шт"/></insert>
+        <insert tableName="units"><column name="name" value="ч.л."/></insert>
+        <insert tableName="units"><column name="name" value="ст.л."/></insert>
+        <insert tableName="units"><column name="name" value="щепотка"/></insert>
+
+    </changeSet>
+
+</databaseChangeLog>
