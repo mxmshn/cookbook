@@ -1,19 +1,19 @@
-package ru.mashnin.dto.request;
+package ru.mashnin.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.UUID;
+import ru.mashnin.entity.Recipe;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-public class RecipeStepRequest {
+public class RecipeStepResponse {
+
     private String description;
+
     private Short stepNumber;
+
     private String imageUrl;
-    private UUID recipeId;
+
 }

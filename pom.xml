@@ -12,11 +12,11 @@
     <modules>
         <module>cookbook-app</module>
         <module>cookbook-database-migrations</module>
+        <module>cookbook-common-security</module>
         <module>cookbook-recipes</module>
         <module>cookbook-user-management</module>
         <module>cookbook-model</module>
         <module>cookbook-mail</module>
-        <module>cookbook-common-security</module>
     </modules>
 
     <properties>
